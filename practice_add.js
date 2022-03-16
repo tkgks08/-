@@ -18,13 +18,22 @@ function add(todo){
     if (todo || input.value){
         const li = document.createElement("li");
         if(todo){
-            li.innerText = todo;
+            li.innerText = todo.text;
         }else{
             li.innerText = input.value
         }
         li.classList.add("list-group-item");
         ul.appendChild(li);
         input.value = "";
+
+        li.addEventListener("click", function (){
+            li.classList.toggle("text-decoration-line-through");
+            saveData();
+        });
+
+        if (todo && todo.completed){
+            li.classList.add("text-decoration-line-through");
+        }
 
         li.addEventListener("contextmenu", function (event){
             event.preventDefault();
@@ -39,7 +48,11 @@ function saveData(){
     let lists = document.querySelectorAll("li")
     let todos = [];
     lists.forEach(list => {
-        todos.push(list.innerText);
+        let todo = {
+            text: list.innerText, 
+            completed: list.classList.contains("text-decoration-line-through")
+        }
+        todos.push(todo);
     });
     localStorage.setItem('todos', JSON.stringify(todos));
 }
